@@ -3,6 +3,7 @@ const main = require('./config/db');
 const app = express();
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
+const { authRouter } = require('./routes/auth.routes');
 
 app.use(express.json());
 app.use(cookieParser());
@@ -12,6 +13,9 @@ app.use(cookieParser());
 app.get('/', (req, res) => {
     res.send('Hello World');
 });
+
+
+app.use("/api/v1" , authRouter)
 
 main().then(() => {
     console.log('Connected to MongoDB');
