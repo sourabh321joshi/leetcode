@@ -39,6 +39,7 @@ const register = async (req , res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password , 10);
+    req.body.role = 'user'
 
     const user = await User.create({
         firstName,
@@ -46,7 +47,7 @@ const register = async (req , res) => {
         password : hashedPassword 
     })
 
-    const token = jwt.sign( {_id : user._id} , process.env.JWT_KEY, { expiresIn: "1h" })
+    const token = jwt.sign( {_id : user._id , role:user.role} , process.env.JWT_KEY, { expiresIn: "1h" })
     res.cookie('token', token, {
         httpOnly: true,
         secure: true,
@@ -111,7 +112,7 @@ const login = async (req,res) => {
         }
 
         const token = jwt.sign(
-            { _id: user._id },
+            { _id: user._id , role:user.role },
             process.env.JWT_KEY,
             { expiresIn: "1h" }
         );
@@ -144,10 +145,10 @@ const login = async (req,res) => {
 
 const logout = async (req,res) => {
     try{
-
+        
     }catch(error){
 
     }
 }
 
-module.exports = {register , login}
+module.exports = {register , login ,logout}
